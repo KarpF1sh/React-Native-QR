@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, StyleSheet, Text } from 'react-native';
 import { Camera, CameraView } from 'expo-camera';
 
 type Props = {
@@ -7,30 +7,31 @@ type Props = {
 };
 
 export default function QRScanner({ onScan }: Props) {
-  const [hasPermission, setHasPermission] = useState<boolean | null>(null);
+  const [permission, setPermission] = useState<boolean | null>(null);
   const [scanned, setScanned] = useState(false);
-  const cameraRef = useRef(null);
 
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
-      setHasPermission(status === 'granted');
+      setPermission(status === 'granted');
     })();
   }, []);
 
-  const handleBarCodeScanned = ({ data }: { data: string }) => {
-    setScanned(true);
-    onScan(data);
-    setTimeout(() => setScanned(false), 3000); // Allow scanning again after delay
+  const handleScanned = ({ data }: { data: string }) => {
+    if (!scanned) {
+      setScanned(true);
+      onScan(data);
+      setTimeout(() => setScanned(false), 2000);
+    }
   };
 
-  if (hasPermission === null) return <Text>Requesting camera permission...</Text>;
-  if (hasPermission === false) return <Text>No access to camera</Text>;
+  if (permission === null) return <Text>Requesting camera permission...</Text>;
+  if (!permission) return <Text>No access to camera</Text>;
 
   return (
-    <View style={styles.cameraContainer}>
+    <View style={styles.wrapper}>
         <CameraView
-        onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
+        onBarcodeScanned={scanned ? undefined : handleScanned}
         style={StyleSheet.absoluteFillObject}
       />
     </View>
@@ -38,9 +39,17 @@ export default function QRScanner({ onScan }: Props) {
 }
 
 const styles = StyleSheet.create({
-  cameraContainer: {
+  wrapper: {
+    height: 300,
+    borderRadius: 20,
+    overflow: 'hidden',
+    marginBottom: 20
+  },
+  frame: {
     flex: 1,
-    borderRadius: 10,
-    overflow: 'hidden'
+    borderColor: '#00ffe0',
+    borderWidth: 2,
+    borderRadius: 20
   }
 });
+

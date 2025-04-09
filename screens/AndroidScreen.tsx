@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Button, Share, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Share } from 'react-native';
 import QRScanner from '../components/QRScanner';
 
 export default function AndroidScreen() {
@@ -9,13 +9,25 @@ export default function AndroidScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Android QR Scanner</Text>
+      <Text style={styles.title}>Code Scanner</Text>
       <QRScanner onScan={handleShare} />
+      <Text style={styles.sub}>Scan a code and share instantly</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, justifyContent: 'center' },
-  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 20 }
+  container: { flex: 1, padding: 20, gap: 16 },
+  title: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#00ffe0',
+    alignSelf: 'center',
+    marginBottom: 10
+  },
+  sub: {
+    textAlign: 'center',
+    color: '#aaa',
+    fontSize: 14
+  }
 });

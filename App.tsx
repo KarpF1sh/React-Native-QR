@@ -1,8 +1,12 @@
 import React from 'react';
-import { Platform } from 'react-native';
+import { Platform, SafeAreaView, StatusBar } from 'react-native';
 import AndroidScreen from './screens/AndroidScreen';
 import IOSScreen from './screens/IOSScreen';
 
 export default function App() {
-  return Platform.OS === 'android' ? <IOSScreen /> : <IOSScreen />;
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#121212', paddingTop: StatusBar.currentHeight || 0 }}>
+      {Platform.OS === 'android' ? <AndroidScreen /> : <IOSScreen />}
+    </SafeAreaView>
+  );
 }
